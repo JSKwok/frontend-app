@@ -3,22 +3,22 @@ import PropTypes from 'prop-types';
 import './Dashboard.scss';
 
 import FetchDataMin from '../../HOC/FetchDataMin'
-import {    getOverviewTableData, 
-            getBalanceHistory, 
+import {    getOverviewTableData,
+            getBalanceHistory,
             getTransactionHistory } from '../../service/axios-service'
 import { user, balance, account} from '../../service/body-data'
 
-import {    LeftSidebar, 
-            TransferModal, 
-            DoughnutChart, 
-            LineChart, 
-            ChartTable, 
-            TransactionTable, 
+import {    LeftSidebar,
+            TransferModal,
+            DoughnutChart,
+            LineChart,
+            ChartTable,
+            TransactionTable,
             Footer } from './../../components';
 
 export default class Dashboard extends Component{
-    /** 
-     * This state is lifted up from TransactionTable for creating Http request body data which 
+    /**
+     * This state is lifted up from TransactionTable for creating Http request body data which
      *  will be passed to HOC FetchDataMin as "interval" argument.
      */
     state = {
@@ -44,7 +44,7 @@ export default class Dashboard extends Component{
          return (
             <div className="dashboard-container">
                 <div className="navigation">
-                    <LeftSidebar  ref_code={this.props.location.state.ref_code}/>
+                    <LeftSidebar ref_code={this.props.location.state? this.props.location.state.ref_code : '21232'} />
                 </div>
                 <div className="content-wrapper" id="content-div">
                     <div className="overview-container">
