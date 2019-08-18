@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { LeftSidebar } from './../../components';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { LeftSidebar,
+         ExchangeInvestments } from './../../components';
+
+import FetchDataMin from '../../HOC/FetchDataMin'
+import {    getOverviewTableData,
+            getBalanceHistory,
+            getTransactionHistory } from '../../service/axios-service'
+import { user, balance, account} from '../../service/body-data'
+
+
 
 export default class Exchange extends Component {
   render() {
+    // const ExchangeInvestmentsMin = FetchDataMin(ExchangeInvestments, getOverviewTableData, user);
+
     return (
       <div className="exchange-container">
       Exchange Page
@@ -14,7 +24,7 @@ export default class Exchange extends Component {
         </div>
 
         <div className="exchange-investments">
-
+          <ExchangeInvestments />
         </div>
       </div>
     )
