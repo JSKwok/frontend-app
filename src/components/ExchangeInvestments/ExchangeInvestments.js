@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { UncontrolledAlert } from 'reactstrap';
 
 export default class ExchangeInvestments extends Component {
   constructor(props) {
@@ -9,10 +10,11 @@ export default class ExchangeInvestments extends Component {
     this.state = {
       amount: null,
       output: undefined,
-      currencies: [],
+      currencies: {},
+      currencyArr: [],
       fromCurrency: 'CAD',
       toCurrency: 'CLAM',
-      all_investments: []
+      alert: false
     };
   }
 
@@ -21,11 +23,16 @@ export default class ExchangeInvestments extends Component {
       .then(res => {
         const data = res.data;
         const currencies = [];
+        const currencyArr = [];
         for (const investment in data.investments) {
-          currencies.push(data.investments[investment].currency);
+          currencies[data.investments[investment].currency] = data.investments[investment].investment_id
+
+          currencyArr.push(data.investments[investment].currency)
         }
-        this.setState({ currencies })
-        this.setState({ all_investments: data.investments})
+        this.setState({
+          currencies,
+          currencyArr,
+        });
       });
   }
 
@@ -52,25 +59,34 @@ export default class ExchangeInvestments extends Component {
       })
   }
 
-  exchangeHandler(e) {
+  exchangeHandler = (e) => {
     axios.post(`http://178.128.233.31/backend/fx/exchange`,
     {
       "username":"ayesha",
-      "source_investment":12,
-      "target_investment":11,
-      "amount":1
+      "source_investment": this.state.currencies[this.state.fromCurrency],
+      "target_investment": this.state.currencies[this.state.toCurrency],
+      "amount": this.state.amount
+    })
+    .then(res => {
+      console.log(res);
+      this.setState({alert : true});
     })
   }
 
   render() {
     return (
       <div className="exchange-form">
+        {this.state.alert === true ? (
+          <UncontrolledAlert color="success">
+            Success!
+          </UncontrolledAlert>
+        ) : null }
 
         <select
           className="from-currency"
           onChange={e => this.selectHandler(e)}
         >
-          {this.state.currencies.map(currency => (
+          {this.state.currencyArr.map(currency => (
             <option> {currency} </option>
           ))}
         </select>
@@ -81,7 +97,10 @@ export default class ExchangeInvestments extends Component {
           onChange={e => this.amountHandler(e)}
         />
 
-        <button className="exchange-button">
+        <button
+          className="exchange-button"
+          onClick={this.exchangeHandler}
+        >
           Exchange
         </button>
 
@@ -89,7 +108,7 @@ export default class ExchangeInvestments extends Component {
           className="to-currency"
           onChange={e => this.selectHandler(e)}
         >
-          {this.state.currencies.map(currency => (
+          {this.state.currencyArr.map(currency => (
             <option> {currency} </option>
           ))}
         </select>
